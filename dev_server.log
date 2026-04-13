@@ -1,0 +1,14 @@
+
+> temp@0.1.0 dev
+> next dev
+
+▲ Next.js 16.2.3 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 872ms
+
+○ Compiling / ...
+ GET / 200 in 6.2s (next.js: 5.5s, application-code: 661ms)
+ GET /learning-tree 200 in 1015ms (next.js: 547ms, application-code: 468ms)
+ GET /task-tracker 200 in 858ms (next.js: 571ms, application-code: 287ms)
+ GET /focus-environment 200 in 714ms (next.js: 499ms, application-code: 215ms)
