@@ -1,0 +1,1 @@
+const B="http://localhost:8000";export const g=()=>fetch(`${B}/generate_research_prompt`).then(r=>r.json());export const r=()=>fetch(`${B}/roadmap`).then(r=>r.json());export const u=(id:string,s:string)=>fetch(`${B}/update_node`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({id,s})}).then(r=>r.json());

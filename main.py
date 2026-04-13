@@ -1,5 +1,7 @@
 from fastapi import FastAPI;from models.m import P,U;from services.s import rd,wr,llm
+from fastapi.middleware.cors import CORSMiddleware
 a=FastAPI()
+a.add_middleware(CORSMiddleware,allow_origins=["*"],allow_methods=["*"],allow_headers=["*"])
 @a.get("/generate_research_prompt")
 def g():return llm(f"Profile:{rd('data/user_profile.json')} Roadmap:{rd('data/roadmap.json')} Create highly specific Deep Research prompt for Gemini.")
 @a.post("/ingest_research")
