@@ -1,1 +1,0 @@
-import{useState,useEffect}from'react';import{r}from'./api';import{Tree,NodeCard}from'./components';export const L=()=>{const[n,sn]=useState([]);useEffect(()=>{r().then(sn)},[]);return <Tree>{n.map((x:any)=><NodeCard key={x.id} {...x}/>)}</Tree>}

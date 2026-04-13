@@ -1,1 +1,0 @@
-[{"id": "node-1", "title": "Local Vector DB", "description": "Setup Milvus or Weaviate locally", "priority": "High", "category": "Infrastructure", "url": "", "prerequisites": [], "status": "completed"}]

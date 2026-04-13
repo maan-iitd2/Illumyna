@@ -1,1 +1,0 @@
-import{useState,useEffect}from'react';import{r,u}from'./api';import{Checklist,TaskCard}from'./components';export const T=()=>{const[n,sn]=useState([]);useEffect(()=>{r().then(sn)},[]);return <Checklist>{n.map((x:any)=><TaskCard key={x.id} {...x} onComplete={()=>u(x.id,'completed').then(sn)}/>)}</Checklist>}
