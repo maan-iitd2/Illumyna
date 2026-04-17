@@ -1,0 +1,79 @@
+.media-container {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  min-height: 400px;
+  background-color: var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-sm);
+}
+
+.youtube-container {
+  /* 16:9 Aspect Ratio tricky override for youtube if needed, but flex 1 handles it well in task screen */
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+  min-height: 0;
+}
+
+.media-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: var(--bg-card);
+}
+
+.pdf-container {
+  min-height: 500px;
+}
+
+.media-error {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius-lg);
+  min-height: 200px;
+  font-weight: 500;
+}
+
+.pdf-fallback {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--bg-card);
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-secondary);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.btn-fallback {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bg-primary);
+  background-color: var(--accent);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-fallback:hover {
+  background-color: var(--text-secondary);
+}
