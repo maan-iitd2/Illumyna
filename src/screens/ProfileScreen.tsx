@@ -1,20 +1,44 @@
 import React, { useState } from 'react';
-import { Menu, Moon, Sun } from 'lucide-react';
+import { Menu, Moon, Sun, CheckCircle } from 'lucide-react';
 import type { ScreenProps } from './HomeScreen';
+import { useProfileStore } from '../store/profileStore';
+import { useTasksStore } from '../store/tasksStore';
+import { TagInput } from '../components/TagInput';
 import './ProfileScreen.css';
+import type { UserProfile } from '../types';
 
 export const ProfileScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, toggleDarkMode }) => {
-  const [profile, setProfile] = useState({
-    targetRole: 'Software Engineer',
-    currentLevel: 'Intermediate',
-    interests: 'AI, Web Development',
-    weeklyCommitment: '10 hours',
-    description: 'Looking to transition into a full-stack role with focus on React and Node.js'
-  });
+  const { profile, updateProfile } = useProfileStore();
+  const { tasks } = useTasksStore();
+  
+  const [localProfile, setLocalProfile] = useState<UserProfile>(profile);
+  const [isSaved, setIsSaved] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setProfile({ ...profile, [e.target.name]: e.target.value });
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    let finalValue: any = value;
+    if (name === 'weeklyCommitmentHours') {
+      finalValue = Number(value) || 0;
+    }
+    setLocalProfile({ ...localProfile, [name]: finalValue });
   };
+
+  const handleTagsChange = (tags: string[]) => {
+    setLocalProfile({ ...localProfile, interests: tags });
+  };
+
+  const handleSave = () => {
+    updateProfile(localProfile);
+    setIsSaved(true);
+    setTimeout(() => setIsSaved(false), 2000);
+  };
+
+  const completedTasks = tasks.filter(t => t.status === 'completed');
+  const totalTasks = tasks.length;
+  const avgProgress = totalTasks > 0 ? tasks.reduce((sum, t) => sum + t.progressPercent, 0) / totalTasks : 0;
+  
+  // Weekly commitment derived from all tasks
+  const timeSpentHours = tasks.reduce((sum, t) => sum + t.timeSpentSeconds, 0) / 3600;
 
   return (
     <div className="profile-screen fade-in">
@@ -32,15 +56,15 @@ export const ProfileScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, 
 
       <div className="stats-section">
         <div className="stat-card">
-          <span className="stat-value">12h</span>
+          <span className="stat-value">{timeSpentHours.toFixed(1)}h</span>
           <span className="stat-label">This Week</span>
         </div>
         <div className="stat-card">
-          <span className="stat-value">6</span>
+          <span className="stat-value">{completedTasks.length}</span>
           <span className="stat-label">Tasks Done</span>
         </div>
         <div className="stat-card">
-          <span className="stat-value">85%</span>
+          <span className="stat-value">{Math.round(avgProgress)}%</span>
           <span className="stat-label">Progress</span>
         </div>
       </div>
@@ -52,37 +76,38 @@ export const ProfileScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, 
             type="text" 
             id="targetRole" 
             name="targetRole" 
-            value={profile.targetRole} 
+            value={localProfile.targetRole} 
             onChange={handleChange} 
           />
         </div>
         <div className="form-group">
           <label htmlFor="currentLevel">Current Level</label>
-          <input 
-            type="text" 
-            id="currentLevel" 
-            name="currentLevel" 
-            value={profile.currentLevel} 
-            onChange={handleChange} 
+          <select
+            id="currentLevel"
+            name="currentLevel"
+            value={localProfile.currentLevel}
+            onChange={handleChange}
+          >
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <option value="Advanced">Advanced</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Interests</label>
+          <TagInput 
+            tags={localProfile.interests || []} 
+            onChange={handleTagsChange} 
+            placeholder="Type and press Enter, separating by comma" 
           />
         </div>
         <div className="form-group">
-          <label htmlFor="interests">Interests (comma separated)</label>
+          <label htmlFor="weeklyCommitmentHours">Weekly Time Commitment (Hours)</label>
           <input 
-            type="text" 
-            id="interests" 
-            name="interests" 
-            value={profile.interests} 
-            onChange={handleChange} 
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="weeklyCommitment">Weekly Time Commitment</label>
-          <input 
-            type="text" 
-            id="weeklyCommitment" 
-            name="weeklyCommitment" 
-            value={profile.weeklyCommitment} 
+            type="number" 
+            id="weeklyCommitmentHours" 
+            name="weeklyCommitmentHours" 
+            value={localProfile.weeklyCommitmentHours} 
             onChange={handleChange} 
           />
         </div>
@@ -91,13 +116,20 @@ export const ProfileScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, 
           <textarea 
             id="description" 
             name="description" 
-            value={profile.description} 
+            value={localProfile.description || ''} 
             onChange={handleChange} 
             rows={4}
           />
         </div>
         
-        <button className="btn-save">Save Profile</button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginTop: '16px' }}>
+          <button className="btn-save" onClick={handleSave} style={{ margin: 0, padding: '12px 24px', flexShrink: 0 }}>Save Profile</button>
+          {isSaved && (
+            <span className="fade-in" style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--status-learned)', fontSize: '14px', fontWeight: 500 }}>
+              <CheckCircle size={16} /> Saved Successfully
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );

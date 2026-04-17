@@ -9,11 +9,11 @@ interface KnowledgeState {
 }
 
 const mockNodes: KnowledgeNode[] = [
-  { id: '1', label: 'Fundamentals', status: 'learned' },
-  { id: '2', label: 'Intermediate Concepts', status: 'learned' },
-  { id: '3', label: 'Advanced Application', status: 'in-progress' },
-  { id: '4', label: 'Side Topic A', status: 'recommended' },
-  { id: '5', label: 'Specialization', status: 'recommended' },
+  { id: '1', label: 'Fundamentals', status: 'learned', position: { x: 50, y: 50 } },
+  { id: '2', label: 'Intermediate Concepts', status: 'learned', position: { x: 50, y: 150 } },
+  { id: '3', label: 'Advanced Application', status: 'in-progress', position: { x: 50, y: 250 }, taskId: 't1' },
+  { id: '4', label: 'Side Topic A', status: 'recommended', position: { x: 250, y: 150 } },
+  { id: '5', label: 'Specialization', status: 'recommended', position: { x: 250, y: 350 } },
 ];
 
 const mockEdges: KnowledgeEdge[] = [

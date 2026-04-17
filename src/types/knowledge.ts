@@ -3,6 +3,7 @@ export interface KnowledgeNode {
   label: string;
   status: 'learned' | 'in-progress' | 'recommended';
   taskId?: string;
+  position?: { x: number; y: number };
 }
 
 export interface KnowledgeEdge {

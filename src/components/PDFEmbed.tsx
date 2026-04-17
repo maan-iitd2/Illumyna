@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { ExternalLink, Maximize } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Maximize2, Minimize2 } from 'lucide-react';
 import './MediaEmbed.css';
 
 interface Props {
@@ -8,16 +8,19 @@ interface Props {
 
 export const PDFEmbed: React.FC<Props> = ({ url }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
-  const handleFullScreen = () => {
-    if (containerRef.current) {
-      if (!document.fullscreenElement) {
-        containerRef.current.requestFullscreen().catch((err) => {
-          console.error(`Error attempting to enable fullscreen mode: ${err.message}`);
-        });
-      } else {
-        document.exitFullscreen();
-      }
+  useEffect(() => {
+    const handleChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', handleChange);
+    return () => document.removeEventListener('fullscreenchange', handleChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen();
+    } else {
+      document.exitFullscreen();
     }
   };
 
@@ -32,17 +35,13 @@ export const PDFEmbed: React.FC<Props> = ({ url }) => {
         src={url}
         title="PDF Document Viewer"
       ></iframe>
-      <div className="pdf-fallback">
-        <p style={{ margin: 0 }}>If the PDF isn't rendering gracefully in your browser, try opening it strictly.</p>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button onClick={handleFullScreen} className="btn-fallback" style={{ cursor: 'pointer', border: 'none' }}>
-            <Maximize size={16} /> Full Screen
-          </button>
-          <a href={url} target="_blank" rel="noopener noreferrer" className="btn-fallback">
-            <ExternalLink size={16} /> Open PDF in new tab
-          </a>
-        </div>
-      </div>
+      <button
+        className="pdf-fullscreen-btn"
+        onClick={toggleFullscreen}
+        title={isFullscreen ? 'Exit fullscreen' : 'View fullscreen'}
+      >
+        {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+      </button>
     </div>
   );
 };

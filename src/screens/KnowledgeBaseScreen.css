@@ -34,9 +34,9 @@
   border-radius: 50%;
 }
 
-.dot.learned { background-color: var(--status-learned); }
-.dot.in-progress { background-color: var(--status-in-progress); }
-.dot.recommended { border: 1px solid var(--status-in-progress); background-color: var(--status-recommended); }
+.dot.learned { background-color: var(--status-learned); border: 2px solid var(--status-learned); }
+.dot.in-progress { background-color: transparent; border: 2px dashed var(--status-in-progress); }
+.dot.recommended { background-color: transparent; border: 2px solid var(--status-recommended); }
 
 .react-flow-container {
   flex: 1;
@@ -62,6 +62,8 @@
 }
 
 .kb-node.learned {
+  background-color: var(--status-learned) !important;
+  color: var(--bg-primary) !important;
   border-color: var(--status-learned) !important;
   border-width: 2px !important;
 }
@@ -69,12 +71,14 @@
 .kb-node.in-progress {
   border-color: var(--status-in-progress) !important;
   border-style: dashed !important;
+  border-width: 2px !important;
 }
 
 .kb-node.recommended {
   color: var(--text-secondary);
-  border-color: var(--border) !important;
-  background-color: var(--bg-primary) !important;
+  border-color: var(--status-recommended) !important;
+  background-color: transparent !important;
+  border-width: 2px !important;
 }
 
 .kb-node:hover {
