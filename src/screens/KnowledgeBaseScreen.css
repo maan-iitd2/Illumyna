@@ -1,0 +1,98 @@
+.kb-screen {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+}
+
+.kb-title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.kb-legend {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  background-color: var(--bg-card);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.learned { background-color: var(--status-learned); }
+.dot.in-progress { background-color: var(--status-in-progress); }
+.dot.recommended { border: 1px solid var(--status-in-progress); background-color: var(--status-recommended); }
+
+.react-flow-container {
+  flex: 1;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* Custom Node Styles overriding ReactFlow defaults */
+.kb-node {
+  padding: 12px 16px;
+  border-radius: var(--radius-md) !important;
+  font-family: 'Work Sans', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  min-width: 140px;
+  text-align: center;
+  box-shadow: var(--shadow-sm) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary);
+  background-color: var(--bg-card) !important;
+}
+
+.kb-node.learned {
+  border-color: var(--status-learned) !important;
+  border-width: 2px !important;
+}
+
+.kb-node.in-progress {
+  border-color: var(--status-in-progress) !important;
+  border-style: dashed !important;
+}
+
+.kb-node.recommended {
+  color: var(--text-secondary);
+  border-color: var(--border) !important;
+  background-color: var(--bg-primary) !important;
+}
+
+.kb-node:hover {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.react-flow__controls button {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  fill: var(--text-primary) !important;
+  border: 1px solid var(--border) !important;
+  border-bottom: none !important;
+}
+
+.react-flow__controls button:last-child {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.react-flow__controls button svg {
+  fill: var(--text-primary) !important;
+}
