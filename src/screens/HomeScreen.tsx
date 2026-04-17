@@ -1,5 +1,10 @@
 import React from 'react';
-import { ChevronRight, Edit3, Menu, Moon, Sun } from 'lucide-react';
+import { ChevronRight, Edit3, Menu, Moon, Sun, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useUpdatesStore } from '../store/updatesStore';
+import { useTasksStore } from '../store/tasksStore';
+import { UpdateCard } from '../components/UpdateCard';
+import type { Update, Task } from '../types';
 import './HomeScreen.css';
 
 export interface ScreenProps {
@@ -9,6 +14,40 @@ export interface ScreenProps {
 }
 
 export const HomeScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, toggleDarkMode }) => {
+  const navigate = useNavigate();
+  const { updates, isLoading, dismissUpdate, convertUpdate } = useUpdatesStore();
+  const { tasks, setActiveTask, addTask } = useTasksStore();
+
+  const newUpdates = updates.filter(u => u.status === 'new');
+  // Maximum 3 tasks inside progress section
+  const progressTasks = tasks.slice(0, 3);
+
+  const handleAddToTasks = (update: Update) => {
+    // Create new task mapped from Update
+    const newTask: Task = {
+      id: `t_${Date.now()}`,
+      updateId: update.id,
+      title: update.title,
+      topic: update.tags[0] || 'General',
+      mediaType: 'article', // Default placeholder
+      mediaUrl: '',
+      progressPercent: 0,
+      notes: '',
+      status: 'active',
+      timeSpentSeconds: 0,
+      createdAt: new Date().toISOString()
+    };
+    addTask(newTask);
+    setActiveTask(newTask.id);
+    convertUpdate(update.id);
+    navigate('/task');
+  };
+
+  const handleTaskClick = (taskId: string) => {
+    setActiveTask(taskId);
+    navigate('/task');
+  };
+
   return (
     <div className="home-screen fade-in">
       <div className="screen-header">
@@ -24,44 +63,50 @@ export const HomeScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, tog
       </div>
 
       <div className="progress-section">
-        <div className="progress-card">
-          <div className="progress-info">
-            <span className="task-title">Prev Task 1</span>
-            <div className="progress-bar-container">
-              <div className="progress-bar-fill" style={{ width: '60%' }}></div>
+        {progressTasks.map(task => (
+          <div key={task.id} className="progress-card" onClick={() => handleTaskClick(task.id)}>
+            <div className="progress-info">
+              <span className="task-title" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '140px' }}>
+                {task.title}
+              </span>
+              <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${task.progressPercent}%` }}></div>
+              </div>
             </div>
-          </div>
-          <ChevronRight size={20} className="chevron-icon" />
-        </div>
-        <div className="progress-card">
-          <div className="progress-info">
-            <span className="task-title">Prev Task 2</span>
-            <div className="progress-bar-container">
-              <div className="progress-bar-fill" style={{ width: '85%' }}></div>
-            </div>
-          </div>
-          <ChevronRight size={20} className="chevron-icon" />
-        </div>
-      </div>
-
-      <div className="updates-feed">
-        {[1, 2, 3, 4].map((item) => (
-          <div key={item} className="update-card">
-            <p className="update-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore.
-            </p>
-            <div className="update-actions">
-              <button className="btn-dismiss">Dismiss</button>
-              <button className="btn-ok">Ok</button>
-            </div>
+            <ChevronRight size={20} className="chevron-icon" />
           </div>
         ))}
       </div>
 
+      <div className="updates-feed">
+        {newUpdates.map((update) => (
+          <UpdateCard 
+            key={update.id} 
+            update={update} 
+            onDismiss={dismissUpdate} 
+            onAddToTasks={handleAddToTasks} 
+          />
+        ))}
+        {newUpdates.length === 0 && (
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)', marginTop: '40px' }}>
+            No new updates available.
+          </div>
+        )}
+      </div>
+
       <div className="floating-action-wrapper">
-        <button className="btn-fetch-updates">
-          <span>Fetch Updates</span>
-          <Edit3 size={18} />
+        <button className="btn-fetch-updates" disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span>Fetching...</span>
+              <Loader2 size={18} className="spinner" />
+            </>
+          ) : (
+            <>
+              <span>Fetch Updates</span>
+              <Edit3 size={18} />
+            </>
+          )}
         </button>
       </div>
     </div>

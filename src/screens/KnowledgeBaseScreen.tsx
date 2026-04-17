@@ -7,6 +7,7 @@ import {
   useEdgesState,
   MarkerType,
 } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import { Menu, Moon, Sun } from 'lucide-react';
 import type { ScreenProps } from './HomeScreen';
 import '@xyflow/react/dist/style.css';
@@ -45,7 +46,7 @@ const initialNodes = [
   },
 ];
 
-const makeEdges = (edgeColor: string) => [
+const makeEdges = (edgeColor: string): Edge[] => [
   { id: 'e1-2', source: '1', target: '2', type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed, color: edgeColor }, style: { stroke: edgeColor, strokeWidth: 2 } },
   { id: 'e2-3', source: '2', target: '3', type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed, color: edgeColor }, style: { stroke: edgeColor, strokeWidth: 2 } },
   { id: 'e2-4', source: '2', target: '4', type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed, color: edgeColor }, style: { stroke: edgeColor, strokeWidth: 2 } },
@@ -55,7 +56,7 @@ const makeEdges = (edgeColor: string) => [
 export const KnowledgeBaseScreen: React.FC<ScreenProps> = ({ onMenuClick, isDarkMode, toggleDarkMode }) => {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const edgeColor = isDarkMode ? '#555555' : '#e5e5e5';
-  const [edges, setEdges, onEdgesChange] = useEdgesState(() => makeEdges(edgeColor));
+  const [edges, setEdges, onEdgesChange] = useEdgesState(makeEdges(edgeColor));
 
   useEffect(() => {
     setEdges(makeEdges(isDarkMode ? '#555555' : '#e5e5e5'));
